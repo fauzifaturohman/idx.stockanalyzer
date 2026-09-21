@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>📊 Stock Analyzer IDX — Real-Time Multi-Source</title>
+<title>📊 Stock Analyzer IDX — Full Free Data Sources</title>
 <script src="https://cdn.tailwindcss.com"></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns/dist/chartjs-adapter-date-fns.bundle.min.js"></script>
@@ -36,7 +36,7 @@
     <h1 class="text-xl md:text-2xl font-bold flex items-center gap-2">
       <span class="text-emerald-400">📊</span>
       Stock Analyzer <span class="text-emerald-400">IDX</span>
-      <span class="text-xs badge-idx text-white px-2 py-0.5 rounded ml-2">🇮🇩 Real-Time</span>
+      <span class="text-xs badge-idx text-white px-2 py-0.5 rounded ml-2">🇮🇩 100% Free Sources</span>
     </h1>
     <div class="flex items-center gap-3 text-xs flex-wrap">
       <span class="flex items-center gap-1.5"><span class="pulse-dot"></span> Auto-refresh</span>
@@ -55,7 +55,7 @@
         <label class="block text-xs text-gray-400 mb-1">Kode Saham IDX</label>
         <input id="ticker" type="text" value="BBCA"
           class="w-full bg-gray-800 border border-gray-700 rounded-lg px-3 py-2 text-sm uppercase focus:outline-none focus:border-emerald-500" />
-        <p class="text-xs text-gray-500 mt-1">Contoh: BBCA, BBRI, TLKM, BMRI</p>
+        <p class="text-xs text-gray-500 mt-1">Contoh: BBCA, BBRI, TLKM, BMRI, ASII</p>
       </div>
 
       <div>
@@ -124,7 +124,7 @@
 
     <div id="loading" class="hidden text-center py-16">
       <div class="loading"></div>
-      <p class="mt-3 text-gray-400 text-sm">Mengambil data real-time...</p>
+      <p class="mt-3 text-gray-400 text-sm">Mengambil data dari sumber gratis...</p>
       <p id="loadingDetail" class="mt-1 text-gray-500 text-xs"></p>
     </div>
 
@@ -151,7 +151,7 @@
           <div><span class="text-gray-400 block text-xs">ROE</span><span id="statROE" class="text-emerald-400 font-mono">--</span></div>
           <div><span class="text-gray-400 block text-xs">PBV</span><span id="statPBV" class="text-emerald-400 font-mono">--</span></div>
         </div>
-        <p class="text-xs text-gray-500 mt-2">*Sumber: multi-source fusion (live + database terintegrasi)</p>
+        <p class="text-xs text-gray-500 mt-2">*Sumber: Yahoo Finance + Bursarium (gratis)</p>
       </div>
     </div>
 
@@ -179,17 +179,24 @@
       <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
         <div class="glass border border-gray-800 rounded-xl p-5">
           <h3 class="font-bold mb-3 flex items-center gap-2">
-            <span class="text-blue-400">🔵</span> Google Finance
-            <span id="statusGF" class="src-pill src-fallback ml-auto">--</span>
+            <span class="text-blue-400">🔵</span> Yahoo Finance
+            <span id="statusYF" class="src-pill src-live ml-auto">live</span>
           </h3>
-          <div id="gfinanceData" class="space-y-2 text-sm"></div>
+          <div id="yahooData" class="space-y-2 text-sm"></div>
         </div>
         <div class="glass border border-gray-800 rounded-xl p-5">
           <h3 class="font-bold mb-3 flex items-center gap-2">
-            <span class="text-yellow-400">🟡</span> Investing.com
-            <span id="statusInv" class="src-pill src-fallback ml-auto">--</span>
+            <span class="text-red-400">🔴</span> Bursarium (IDX)
+            <span id="statusBurs" class="src-pill src-fallback ml-auto">--</span>
           </h3>
-          <div id="investingData" class="space-y-2 text-sm"></div>
+          <div id="bursariumData" class="space-y-2 text-sm"></div>
+        </div>
+        <div class="glass border border-gray-800 rounded-xl p-5">
+          <h3 class="font-bold mb-3 flex items-center gap-2">
+            <span class="text-green-400">🟢</span> IDNFinancials
+            <span id="statusIDN" class="src-pill src-fallback ml-auto">--</span>
+          </h3>
+          <div id="idnData" class="space-y-2 text-sm"></div>
         </div>
         <div class="glass border border-gray-800 rounded-xl p-5">
           <h3 class="font-bold mb-3 flex items-center gap-2">
@@ -200,34 +207,30 @@
         </div>
         <div class="glass border border-gray-800 rounded-xl p-5">
           <h3 class="font-bold mb-3 flex items-center gap-2">
-            <span class="text-green-400">🟢</span> KSEI
-            <span id="statusKSEI" class="src-pill src-fallback ml-auto">--</span>
+            <span class="text-yellow-400">🟡</span> Alpha Vantage
+            <span id="statusAV" class="src-pill src-fallback ml-auto">--</span>
           </h3>
-          <div id="kseiData" class="space-y-2 text-sm"></div>
+          <div id="alphaData" class="space-y-2 text-sm"></div>
         </div>
         <div class="glass border border-gray-800 rounded-xl p-5">
           <h3 class="font-bold mb-3 flex items-center gap-2">
-            <span class="text-orange-400">🟠</span> Stockbit
-            <span id="statusSB" class="src-pill src-fallback ml-auto">--</span>
+            <span class="text-orange-400">🟠</span> Finnhub
+            <span id="statusFH" class="src-pill src-fallback ml-auto">--</span>
           </h3>
-          <div id="stockbitData" class="space-y-2 text-sm"></div>
-        </div>
-        <div class="glass border border-gray-800 rounded-xl p-5">
-          <h3 class="font-bold mb-3 flex items-center gap-2">
-            <span class="text-red-400">🔴</span> IDX (BEI)
-            <span id="statusIDX" class="src-pill src-fallback ml-auto">--</span>
-          </h3>
-          <div id="idxData" class="space-y-2 text-sm"></div>
+          <div id="finnhubData" class="space-y-2 text-sm"></div>
         </div>
       </div>
       <div class="glass border border-gray-800 rounded-xl p-5">
-        <h3 class="font-semibold mb-3">🔀 Fusion Data</h3>
+        <h3 class="font-semibold mb-3">🔀 Fusion Data (Gratis)</h3>
         <div class="overflow-x-auto">
           <table class="data-table" id="fusionTable">
             <thead><tr><th>Metrik</th><th>Sumber</th><th class="text-right">Nilai</th></tr></thead>
             <tbody></tbody>
           </table>
         </div>
+        <p class="text-xs text-gray-500 mt-2">
+          Semua sumber data di halaman ini 100% gratis. Tidak ada biaya berlangganan.
+        </p>
       </div>
     </div>
 
@@ -257,19 +260,19 @@
             <tbody></tbody>
           </table>
         </div>
-        <p class="text-xs text-gray-500 mt-3">Data dari multi-source fusion. Riset mandiri tetap diperlukan.</p>
+        <p class="text-xs text-gray-500 mt-3">Data dari Alpha Vantage + Bursarium. Riset mandiri tetap diperlukan.</p>
       </div>
     </div>
   </section>
 </main>
 
 <footer class="border-t border-gray-800 mt-10 py-6 text-center text-xs text-gray-500">
-  ⚠️ Aplikasi ini hanya untuk edukasi. Bukan saran investasi.
+  ⚠️ Aplikasi ini hanya untuk edukasi. Bukan saran investasi. Semua data dari sumber gratis.
 </footer>
 
 <script>
 /* =========================================================
-   KONFIGURASI CORS PROXY (multi-fallback untuk keandalan)
+   KONFIGURASI
    ========================================================= */
 const CORS_PROXIES = [
   url => `https://api.allorigins.win/raw?url=${encodeURIComponent(url)}`,
@@ -284,115 +287,33 @@ async function corsFetch(url, opts = {}) {
       const res = await fetch(makeUrl(url), opts);
       if (res.ok) return res;
       lastErr = new Error(`HTTP ${res.status}`);
-    } catch (e) {
-      lastErr = e;
-    }
+    } catch (e) { lastErr = e; }
   }
   throw lastErr || new Error("Semua CORS proxy gagal");
 }
 
-/* =========================================================
-   DATABASE TERINTEGRASI (Google Finance, Investing, KSEI, Stockbit)
-   Sumber-sumber ini butuh autentikasi berbayar, jadi datanya
-   disematkan dan diperbarui manual.
-   ========================================================= */
-const INTEGRATED_DB = {
-  "BBCA": {
-    googleFinance: { name: "Bank Central Asia", pe: 22.5, div: 2.1, roe: 20.5, pbv: 4.2, marketCap: "Rp 926 T", consensus: "Buy", target: "Rp 10.260" },
-    investing:    { fairValue: 10250, upside: "+13.5%", sentiment: "Bullish", technical: "Strong Buy" },
-    ksei:         { investorCount: "1.2 Juta", foreignPct: 32.5, localPct: 67.5, topHolder: "Farindo Investment 54.94%" },
-    stockbit:     { brokerFlow: "Net Buy Rp 245 M", bandar: "Akumulasi", foreignFlow: "Net Buy Rp 180 M", retailFlow: "Net Sell" },
-  },
-  "BBRI": {
-    googleFinance: { name: "Bank Rakyat Indonesia", pe: 7.8, div: 11.3, roe: 14.0, pbv: 1.8, marketCap: "Rp 715 T", consensus: "Buy", target: "Rp 6.500" },
-    investing:    { fairValue: 6200, upside: "+18.2%", sentiment: "Bullish", technical: "Buy" },
-    ksei:         { investorCount: "2.8 Juta", foreignPct: 28.3, localPct: 71.7, topHolder: "Government 53.19%" },
-    stockbit:     { brokerFlow: "Net Buy Rp 312 M", bandar: "Akumulasi", foreignFlow: "Net Buy Rp 220 M", retailFlow: "Net Sell" },
-  },
-  "TLKM": {
-    googleFinance: { name: "Telkom Indonesia", pe: 12.5, div: 5.2, roe: 15.5, pbv: 2.1, marketCap: "Rp 258 T", consensus: "Buy", target: "Rp 3.800" },
-    investing:    { fairValue: 3650, upside: "+15.8%", sentiment: "Bullish", technical: "Buy" },
-    ksei:         { investorCount: "1.8 Juta", foreignPct: 42.1, localPct: 57.9, topHolder: "Government 52.09%" },
-    stockbit:     { brokerFlow: "Net Sell Rp 85 M", bandar: "Distribusi", foreignFlow: "Net Sell Rp 120 M", retailFlow: "Net Buy" },
-  },
-  "BMRI": {
-    googleFinance: { name: "Bank Mandiri", pe: 6.5, div: 11.6, roe: 14.5, pbv: 1.4, marketCap: "Rp 585 T", consensus: "Buy", target: "Rp 7.200" },
-    investing:    { fairValue: 6800, upside: "+16.2%", sentiment: "Bullish", technical: "Strong Buy" },
-    ksei:         { investorCount: "1.5 Juta", foreignPct: 35.2, localPct: 64.8, topHolder: "Government 52.00%" },
-    stockbit:     { brokerFlow: "Net Buy Rp 198 M", bandar: "Akumulasi", foreignFlow: "Net Buy Rp 165 M", retailFlow: "Net Sell" },
-  },
-  "ASII": {
-    googleFinance: { name: "Astra International", pe: 8.5, div: 6.8, roe: 13.5, pbv: 1.2, marketCap: "Rp 235 T", consensus: "Buy", target: "Rp 6.200" },
-    investing:    { fairValue: 5900, upside: "+12.5%", sentiment: "Bullish", technical: "Buy" },
-    ksei:         { investorCount: "980 Ribu", foreignPct: 45.5, localPct: 54.5, topHolder: "Jardine Cycle 50.11%" },
-    stockbit:     { brokerFlow: "Net Buy Rp 128 M", bandar: "Akumulasi", foreignFlow: "Net Buy Rp 95 M", retailFlow: "Net Sell" },
-  },
-  "ADRO": {
-    googleFinance: { name: "Adaro Energy", pe: 4.0, div: 14.7, roe: 16.0, pbv: 0.8, marketCap: "Rp 78 T", consensus: "Buy", target: "Rp 3.200" },
-    investing:    { fairValue: 3050, upside: "+18.5%", sentiment: "Bullish", technical: "Strong Buy" },
-    ksei:         { investorCount: "612 Ribu", foreignPct: 38.0, localPct: 62.0, topHolder: "PT Adaro Strategic 43.91%" },
-    stockbit:     { brokerFlow: "Net Buy Rp 88 M", bandar: "Akumulasi", foreignFlow: "Net Buy Rp 62 M", retailFlow: "Net Sell" },
-  },
-  "ITMG": {
-    googleFinance: { name: "Indo Tambangraya", pe: 5.0, div: 13.6, roe: 15.0, pbv: 1.1, marketCap: "Rp 30 T", consensus: "Buy", target: "Rp 27.500" },
-    investing:    { fairValue: 26500, upside: "+15.0%", sentiment: "Bullish", technical: "Buy" },
-    ksei:         { investorCount: "245 Ribu", foreignPct: 25.0, localPct: 75.0, topHolder: "Banpu 65.13%" },
-    stockbit:     { brokerFlow: "Net Buy Rp 42 M", bandar: "Akumulasi", foreignFlow: "Net Buy Rp 28 M", retailFlow: "Net Sell" },
-  },
-};
+/* Ganti dengan API key gratis Anda dari alphavantage.co/support/#api-key */
+const ALPHA_VANTAGE_KEY = "KXV8OOA0AW7QS0W5";
 
-const DEFAULT_DB = {
-  googleFinance: { name: "N/A", pe: null, div: null, roe: null, pbv: null, marketCap: "-", consensus: "-", target: "-" },
-  investing:    { fairValue: null, upside: "-", sentiment: "-", technical: "-" },
-  ksei:         { investorCount: "-", foreignPct: null, localPct: null, topHolder: "-" },
-  stockbit:     { brokerFlow: "-", bandar: "-", foreignFlow: "-", retailFlow: "-" },
-};
+/* Ganti dengan API key gratis Anda dari finnhub.io/register */
+const FINNHUB_KEY = "daoav41r01qqjqh5tu60daoav41r01qqjqh5tu6g";
 
-/* =========================================================
-   REKOMENDASI AHLI & SCREENER
-   ========================================================= */
-const EXPERT_DATA = [
-  { ticker: "BBCA", name: "Bank Central Asia", analyst: "RHB Sekuritas", rec: "Buy", target: "Rp 10.260", reason: "Sektor perbankan diprediksi pulih, laba tumbuh 12% pada 2026." },
-  { ticker: "BMRI", name: "Bank Mandiri", analyst: "Mirae Asset", rec: "Buy", target: "-", reason: "Fundamental kuat, dividend yield 11,58%, valuasi murah." },
-  { ticker: "TLKM", name: "Telkom Indonesia", analyst: "Mirae Asset", rec: "Buy", target: "-", reason: "Saham defensif dengan prospek spin-off." },
-  { ticker: "BBRI", name: "Bank Rakyat Indonesia", analyst: "RHB Sekuritas", rec: "Buy", target: "-", reason: "Dividend yield 11,34%, ROE 14%+, valuasi atraktif." },
-  { ticker: "ADRO", name: "Adaro Energy", analyst: "Mirae Asset", rec: "Buy", target: "-", reason: "Dividend yield 14,72%, PER rendah, prospek batubara stabil." },
-  { ticker: "ITMG", name: "Indo Tambangraya", analyst: "Mirae Asset", rec: "Buy", target: "-", reason: "Dividend yield 13,62%, kas kuat, valuasi murah." }
-];
-
-const SCREENER_DATA = [
-  { ticker: "BMRI", name: "Bank Mandiri", sector: "Perbankan", pe: 6.5, div: 11.6, roe: 14.5 },
-  { ticker: "BBRI", name: "Bank Rakyat Indonesia", sector: "Perbankan", pe: 7.8, div: 11.3, roe: 14.0 },
-  { ticker: "ITMG", name: "Indo Tambangraya", sector: "Pertambangan", pe: 5.0, div: 13.6, roe: 15.0 },
-  { ticker: "ADRO", name: "Adaro Energy", sector: "Pertambangan", pe: 4.0, div: 14.7, roe: 16.0 },
-  { ticker: "PTBA", name: "Bukit Asam", sector: "Pertambangan", pe: 5.9, div: 12.7, roe: 12.0 },
-  { ticker: "BBNI", name: "Bank Negara Indonesia", sector: "Perbankan", pe: 6.2, div: 8.5, roe: 12.8 },
-  { ticker: "PGAS", name: "Perusahaan Gas Negara", sector: "Energi", pe: 5.5, div: 7.5, roe: 11.0 },
-  { ticker: "INDF", name: "Indofood Sukses", sector: "Konsumer", pe: 5.5, div: 6.5, roe: 10.5 },
-  { ticker: "ASII", name: "Astra International", sector: "Otomotif", pe: 8.5, div: 6.8, roe: 13.5 },
-  { ticker: "TLKM", name: "Telkom Indonesia", sector: "Telekomunikasi", pe: 12.5, div: 5.2, roe: 15.5 }
-];
-
-/* =========================================================
-   STATE
-   ========================================================= */
 let mainChartInstance = null;
 let predictChartInstance = null;
 let refreshTimer = null;
 
 /* =========================================================
-   FETCH: HARGA HISTORIS (Yahoo Finance — real-time)
+   SUMBER 1: YAHOO FINANCE (gratis, tanpa API key)
    ========================================================= */
-async function fetchHistorical(symbol, period) {
+async function fetchYahooHistorical(symbol, period) {
   const url = `https://query1.finance.yahoo.com/v8/finance/chart/${symbol}?range=${period}&interval=1d`;
   const res = await corsFetch(url);
   const json = await res.json();
-
   if (!json.chart?.result?.[0]) throw new Error("Data Yahoo tidak ditemukan");
+
   const result = json.chart.result[0];
   const ts = result.timestamp;
   const q = result.indicators.quote[0];
-
   const data = [];
   for (let i = 0; i < ts.length; i++) {
     if (q.close[i] == null) continue;
@@ -405,20 +326,73 @@ async function fetchHistorical(symbol, period) {
   return data;
 }
 
+async function fetchYahooQuote(symbol) {
+  try {
+    const url = `https://query1.finance.yahoo.com/v7/finance/quote?symbols=${symbol}`;
+    const res = await corsFetch(url);
+    const json = await res.json();
+    return json.quoteResponse?.result?.[0] || {};
+  } catch (e) { return {}; }
+}
+
 /* =========================================================
-   FETCH: TRADINGVIEW SCREENER (real-time teknikal)
+   SUMBER 2: BURSARIUM (IDX gratis, Cloudflare Workers)
+   ========================================================= */
+async function fetchBursarium(ticker) {
+  const endpoints = [
+    `https://bursarium.herbras.workers.dev/api/stock/${ticker}/summary`,
+    `https://bursarium.herbras.workers.dev/api/stock/${ticker}`,
+  ];
+  for (const ep of endpoints) {
+    try {
+      const res = await corsFetch(ep);
+      const d = await res.json();
+      if (d && (d.sector || d.per || d.profile)) {
+        return {
+          sector: d.sector || d.industry || "-",
+          per: d.per || d.pe || null,
+          pbv: d.pbv || null,
+          roe: d.roe || null,
+          div: d.dividendYield || d.div || null,
+          foreignFlow: d.foreignFlow || "-",
+          marketCap: d.marketCap || null,
+        };
+      }
+    } catch (e) { console.warn("Bursarium gagal:", e.message); }
+  }
+  throw new Error("Bursarium tidak tersedia");
+}
+
+/* =========================================================
+   SUMBER 3: IDNFINANCIALS (gratis, tanpa API key)
+   ========================================================= */
+async function fetchIDNFinancials(ticker) {
+  try {
+    const url = `https://www.idnfinancials.com/api/v1/company/${ticker.toLowerCase()}`;
+    const res = await corsFetch(url);
+    const d = await res.json();
+    return {
+      name: d.name || "-",
+      dividend: d.dividendYield ? d.dividendYield + "%" : "-",
+      freeFloat: d.freeFloat ? d.freeFloat + "%" : "-",
+      shareholders: d.shareholders?.length || 0,
+      news: d.news?.slice(0, 3) || [],
+    };
+  } catch (e) {
+    console.warn("IDNFinancials gagal:", e.message);
+    return { name: "-", dividend: "-", freeFloat: "-", shareholders: 0, news: [] };
+  }
+}
+
+/* =========================================================
+   SUMBER 4: TRADINGVIEW SCREENER (gratis)
    ========================================================= */
 async function fetchTradingView(ticker) {
   const url = "https://scanner.tradingview.com/indonesia/scan";
   const body = {
     symbols: { tickers: [`IDX:${ticker}`] },
-    columns: [
-      "RSI", "MACD.macd", "MACD.signal",
-      "MA20", "MA50", "MA200",
-      "Recommend.All", "close"
-    ],
+    columns: ["RSI", "MACD.macd", "MACD.signal", "MA20", "MA50", "MA200", "Recommend.All", "close"],
   };
-
   const res = await corsFetch(url, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
@@ -449,12 +423,50 @@ async function fetchTradingView(ticker) {
 }
 
 /* =========================================================
+   SUMBER 5: ALPHA VANTAGE (gratis 25 req/hari)
+   ========================================================= */
+async function fetchAlphaVantage(ticker) {
+  if (ALPHA_VANTAGE_KEY === "demo") throw new Error("Alpha Vantage key belum diset");
+  const symbol = `${ticker}.JK`;
+  const url = `https://www.alphavantage.co/query?function=OVERVIEW&symbol=${symbol}&apikey=${ALPHA_VANTAGE_KEY}`;
+  const res = await corsFetch(url);
+  const d = await res.json();
+  if (!d.Symbol) throw new Error("Data Alpha Vantage tidak ditemukan");
+  return {
+    name: d.Name || "-",
+    pe: d.PERatio ? parseFloat(d.PERatio) : null,
+    div: d.DividendYield ? (parseFloat(d.DividendYield) * 100).toFixed(2) : null,
+    roe: d.ReturnOnEquityTTM ? (parseFloat(d.ReturnOnEquityTTM) * 100).toFixed(2) : null,
+    pbv: d.PriceToBookRatio ? parseFloat(d.PriceToBookRatio) : null,
+    marketCap: d.MarketCapitalization || "-",
+  };
+}
+
+/* =========================================================
+   SUMBER 6: FINNHUB (gratis 60 req/menit)
+   ========================================================= */
+async function fetchFinnhub(ticker) {
+  if (FINNHUB_KEY === "demo") throw new Error("Finnhub key belum diset");
+  const symbol = `${ticker}.JK`;
+  const url = `https://finnhub.io/api/v1/quote?symbol=${symbol}&token=${FINNHUB_KEY}`;
+  const res = await corsFetch(url);
+  const d = await res.json();
+  return {
+    current: d.c || null,
+    change: d.d || null,
+    changePct: d.dp || null,
+    high: d.h || null,
+    low: d.l || null,
+    prevClose: d.pc || null,
+  };
+}
+
+/* =========================================================
    ANALYSIS
    ========================================================= */
 function computeMA(data, window, type = "SMA") {
   const closes = data.map(d => d.close);
   const out = new Array(closes.length).fill(null);
-
   if (type === "SMA") {
     let sum = 0;
     for (let i = 0; i < closes.length; i++) {
@@ -471,9 +483,7 @@ function computeMA(data, window, type = "SMA") {
         let s = 0;
         for (let j = i - window + 1; j <= i; j++) s += closes[j];
         ema = s / window;
-      } else {
-        ema = closes[i] * k + ema * (1 - k);
-      }
+      } else { ema = closes[i] * k + ema * (1 - k); }
       out[i] = ema;
     }
   }
@@ -495,10 +505,7 @@ function predictPrices(data, window, nDays) {
   while (count < nDays) {
     last = new Date(last.getTime() + 24 * 3600 * 1000);
     const day = last.getDay();
-    if (day !== 0 && day !== 6) {
-      futureDates.push(new Date(last));
-      count++;
-    }
+    if (day !== 0 && day !== 6) { futureDates.push(new Date(last)); count++; }
   }
   return futureDates.map((d, i) => ({ date: d, value: predictions[i] }));
 }
@@ -521,7 +528,6 @@ function generateSignal(data, shortW, longW) {
 function renderMainChart(data, ma1, ma2, labels) {
   const ctx = document.getElementById("mainChart").getContext("2d");
   if (mainChartInstance) mainChartInstance.destroy();
-
   mainChartInstance = new Chart(ctx, {
     type: "line",
     data: {
@@ -547,13 +553,11 @@ function renderMainChart(data, ma1, ma2, labels) {
 function renderPredictChart(data, pred) {
   const ctx = document.getElementById("predictChart").getContext("2d");
   if (predictChartInstance) predictChartInstance.destroy();
-
   const histDates = data.map(d => d.date);
   const histPrices = data.map(d => d.close);
   const predDates = pred.map(p => p.date);
   const predPrices = pred.map(p => p.value);
   const connPrices = [histPrices[histPrices.length - 1], ...predPrices];
-
   predictChartInstance = new Chart(ctx, {
     type: "line",
     data: {
@@ -589,37 +593,41 @@ function setStatus(elId, status) {
   const el = document.getElementById(elId);
   el.textContent = status;
   el.className = "src-pill ml-auto " +
-    (status === "live" ? "src-live" :
-     status === "offline" ? "src-offline" : "src-fallback");
+    (status === "live" ? "src-live" : status === "offline" ? "src-offline" : "src-fallback");
 }
 
-function renderMultiSource(ticker, tradingView, idxMeta, status) {
-  const db = INTEGRATED_DB[ticker] || DEFAULT_DB;
+function renderMultiSource(ticker, sources, status) {
+  const yf = sources.yahoo || {};
+  const burs = sources.bursarium || {};
+  const idn = sources.idn || {};
+  const tv = sources.tradingView || {};
+  const av = sources.alphaVantage || {};
+  const fh = sources.finnhub || {};
 
-  // Google Finance (dari DB terintegrasi)
-  const gf = db.googleFinance;
-  document.getElementById("gfinanceData").innerHTML = `
-    <div class="flex justify-between"><span class="text-gray-400">Nama</span><span>${gf.name}</span></div>
-    <div class="flex justify-between"><span class="text-gray-400">Market Cap</span><span class="text-emerald-400">${gf.marketCap}</span></div>
-    <div class="flex justify-between"><span class="text-gray-400">PER</span><span>${gf.pe != null ? gf.pe + "x" : "-"}</span></div>
-    <div class="flex justify-between"><span class="text-gray-400">Div Yield</span><span class="text-emerald-400">${gf.div != null ? gf.div + "%" : "-"}</span></div>
-    <div class="flex justify-between"><span class="text-gray-400">ROE</span><span>${gf.roe != null ? gf.roe + "%" : "-"}</span></div>
-    <div class="flex justify-between"><span class="text-gray-400">Konsensus</span><span class="font-semibold text-emerald-400">${gf.consensus}</span></div>
+  document.getElementById("yahooData").innerHTML = `
+    <div class="flex justify-between"><span class="text-gray-400">Harga</span><span class="text-emerald-400 font-mono">${yf.price ? "Rp " + yf.price.toLocaleString("id-ID") : "-"}</span></div>
+    <div class="flex justify-between"><span class="text-gray-400">Market Cap</span><span>${yf.marketCap || "-"}</span></div>
+    <div class="flex justify-between"><span class="text-gray-400">Currency</span><span>${yf.currency || "IDR"}</span></div>
   `;
-  setStatus("statusGF", "fallback");
+  setStatus("statusYF", status.yahoo);
 
-  // Investing.com
-  const inv = db.investing;
-  document.getElementById("investingData").innerHTML = `
-    <div class="flex justify-between"><span class="text-gray-400">Fair Value</span><span class="text-emerald-400 font-mono">${inv.fairValue ? "Rp " + inv.fairValue.toLocaleString("id-ID") : "-"}</span></div>
-    <div class="flex justify-between"><span class="text-gray-400">Upside</span><span class="text-emerald-400">${inv.upside}</span></div>
-    <div class="flex justify-between"><span class="text-gray-400">Sentimen</span><span class="font-semibold">${inv.sentiment}</span></div>
-    <div class="flex justify-between"><span class="text-gray-400">Teknikal</span><span>${inv.technical}</span></div>
+  document.getElementById("bursariumData").innerHTML = `
+    <div class="flex justify-between"><span class="text-gray-400">Sektor</span><span>${burs.sector || "-"}</span></div>
+    <div class="flex justify-between"><span class="text-gray-400">PER</span><span>${burs.per ? burs.per + "x" : "-"}</span></div>
+    <div class="flex justify-between"><span class="text-gray-400">PBV</span><span>${burs.pbv ? burs.pbv + "x" : "-"}</span></div>
+    <div class="flex justify-between"><span class="text-gray-400">ROE</span><span>${burs.roe ? burs.roe + "%" : "-"}</span></div>
+    <div class="flex justify-between"><span class="text-gray-400">Div Yield</span><span class="text-emerald-400">${burs.div ? burs.div + "%" : "-"}</span></div>
   `;
-  setStatus("statusInv", "fallback");
+  setStatus("statusBurs", status.bursarium);
 
-  // TradingView (LIVE)
-  const tv = tradingView || {};
+  document.getElementById("idnData").innerHTML = `
+    <div class="flex justify-between"><span class="text-gray-400">Nama</span><span>${idn.name || "-"}</span></div>
+    <div class="flex justify-between"><span class="text-gray-400">Dividend</span><span>${idn.dividend || "-"}</span></div>
+    <div class="flex justify-between"><span class="text-gray-400">Free Float</span><span>${idn.freeFloat || "-"}</span></div>
+    <div class="flex justify-between"><span class="text-gray-400">Shareholder</span><span>${idn.shareholders || 0}</span></div>
+  `;
+  setStatus("statusIDN", status.idn);
+
   document.getElementById("tradingviewData").innerHTML = `
     <div class="flex justify-between"><span class="text-gray-400">RSI (14)</span><span class="font-mono">${tv.rsi ?? "-"}</span></div>
     <div class="flex justify-between"><span class="text-gray-400">MACD</span><span>${tv.macd ?? "-"}</span></div>
@@ -630,59 +638,70 @@ function renderMultiSource(ticker, tradingView, idxMeta, status) {
   `;
   setStatus("statusTV", status.tradingView);
 
-  // KSEI
-  const ksei = db.ksei;
-  document.getElementById("kseiData").innerHTML = `
-    <div class="flex justify-between"><span class="text-gray-400">Jumlah Investor</span><span class="text-emerald-400">${ksei.investorCount}</span></div>
-    <div class="flex justify-between"><span class="text-gray-400">Asing</span><span>${ksei.foreignPct != null ? ksei.foreignPct + "%" : "-"}</span></div>
-    <div class="flex justify-between"><span class="text-gray-400">Lokal</span><span>${ksei.localPct != null ? ksei.localPct + "%" : "-"}</span></div>
-    <div class="flex justify-between gap-2"><span class="text-gray-400">Pemegang Utama</span><span class="text-right text-xs">${ksei.topHolder}</span></div>
+  document.getElementById("alphaData").innerHTML = `
+    <div class="flex justify-between"><span class="text-gray-400">Nama</span><span>${av.name || "-"}</span></div>
+    <div class="flex justify-between"><span class="text-gray-400">PER</span><span>${av.pe ? av.pe + "x" : "-"}</span></div>
+    <div class="flex justify-between"><span class="text-gray-400">Div Yield</span><span>${av.div ? av.div + "%" : "-"}</span></div>
+    <div class="flex justify-between"><span class="text-gray-400">ROE</span><span>${av.roe ? av.roe + "%" : "-"}</span></div>
+    <div class="flex justify-between"><span class="text-gray-400">PBV</span><span>${av.pbv ? av.pbv + "x" : "-"}</span></div>
   `;
-  setStatus("statusKSEI", "fallback");
+  setStatus("statusAV", status.alphaVantage);
 
-  // Stockbit
-  const sb = db.stockbit;
-  document.getElementById("stockbitData").innerHTML = `
-    <div class="flex justify-between"><span class="text-gray-400">Broker Flow</span><span class="${sb.brokerFlow.includes("Buy") ? "text-emerald-400" : sb.brokerFlow.includes("Sell") ? "text-red-400" : ""}">${sb.brokerFlow}</span></div>
-    <div class="flex justify-between"><span class="text-gray-400">Bandar</span><span class="font-semibold">${sb.bandar}</span></div>
-    <div class="flex justify-between"><span class="text-gray-400">Foreign Flow</span><span class="${sb.foreignFlow.includes("Buy") ? "text-emerald-400" : sb.foreignFlow.includes("Sell") ? "text-red-400" : ""}">${sb.foreignFlow}</span></div>
-    <div class="flex justify-between"><span class="text-gray-400">Retail Flow</span><span>${sb.retailFlow}</span></div>
+  document.getElementById("finnhubData").innerHTML = `
+    <div class="flex justify-between"><span class="text-gray-400">Harga</span><span class="text-emerald-400 font-mono">${fh.current ? "Rp " + fh.current.toLocaleString("id-ID") : "-"}</span></div>
+    <div class="flex justify-between"><span class="text-gray-400">Change</span><span class="${fh.change >= 0 ? "text-emerald-400" : "text-red-400"}">${fh.change ? fh.change.toFixed(2) : "-"}</span></div>
+    <div class="flex justify-between"><span class="text-gray-400">Change %</span><span class="${fh.changePct >= 0 ? "text-emerald-400" : "text-red-400"}">${fh.changePct ? fh.changePct.toFixed(2) + "%" : "-"}</span></div>
+    <div class="flex justify-between"><span class="text-gray-400">High</span><span>${fh.high ? fh.high.toLocaleString("id-ID") : "-"}</span></div>
+    <div class="flex justify-between"><span class="text-gray-400">Low</span><span>${fh.low ? fh.low.toLocaleString("id-ID") : "-"}</span></div>
   `;
-  setStatus("statusSB", "fallback");
-
-  // IDX (LIVE via Yahoo quote metadata)
-  document.getElementById("idxData").innerHTML = `
-    <div class="flex justify-between"><span class="text-gray-400">Sektor</span><span>${idxMeta.sector ?? "-"}</span></div>
-    <div class="flex justify-between"><span class="text-gray-400">Papan</span><span>${idxMeta.board ?? "Utama"}</span></div>
-    <div class="flex justify-between"><span class="text-gray-400">Mata Uang</span><span>${idxMeta.currency ?? "IDR"}</span></div>
-    <div class="flex justify-between"><span class="text-gray-400">Bursa</span><span>${idxMeta.exchange ?? "JKT"}</span></div>
-  `;
-  setStatus("statusIDX", status.idx);
+  setStatus("statusFH", status.finnhub);
 
   // Fusion table
   const rows = [];
-  if (gf.pe != null) rows.push(["PER", "Google Finance", gf.pe + "x"]);
-  if (gf.div != null) rows.push(["Dividend Yield", "Google Finance", gf.div + "%"]);
-  if (gf.roe != null) rows.push(["ROE", "Google Finance", gf.roe + "%"]);
-  if (inv.fairValue) rows.push(["Fair Value", "Investing.com", "Rp " + inv.fairValue.toLocaleString("id-ID")]);
-  if (tv.rsi) rows.push(["RSI (14)", "TradingView 🟢", tv.rsi]);
-  if (tv.rating) rows.push(["Rating Teknikal", "TradingView 🟢", tv.rating]);
-  if (ksei.investorCount !== "-") rows.push(["Jumlah Investor", "KSEI", ksei.investorCount]);
-  if (sb.brokerFlow !== "-") rows.push(["Broker Flow", "Stockbit", sb.brokerFlow]);
-  if (idxMeta.sector) rows.push(["Sektor", "IDX 🟢", idxMeta.sector]);
+  if (burs.per) rows.push(["PER", "Bursarium", burs.per + "x"]);
+  if (burs.roe) rows.push(["ROE", "Bursarium", burs.roe + "%"]);
+  if (burs.div) rows.push(["Dividend Yield", "Bursarium", burs.div + "%"]);
+  if (av.pe) rows.push(["PER", "Alpha Vantage", av.pe + "x"]);
+  if (av.roe) rows.push(["ROE", "Alpha Vantage", av.roe + "%"]);
+  if (tv.rsi) rows.push(["RSI (14)", "TradingView", tv.rsi]);
+  if (tv.rating) rows.push(["Rating Teknikal", "TradingView", tv.rating]);
+  if (idn.freeFloat !== "-") rows.push(["Free Float", "IDNFinancials", idn.freeFloat]);
+  if (fh.current) rows.push(["Harga Quote", "Finnhub", "Rp " + fh.current.toLocaleString("id-ID")]);
 
-  document.querySelector("#fusionTable tbody").innerHTML = rows.map(r => `
+  document.querySelector("#fusionTable tbody").innerHTML = rows.length ? rows.map(r => `
     <tr>
       <td class="text-gray-300">${r[0]}</td>
       <td><span class="src-pill src-live">${r[1]}</span></td>
       <td class="text-right font-mono text-emerald-400">${r[2]}</td>
     </tr>
-  `).join("");
+  `).join("") : `<tr><td colspan="3" class="text-center py-6 text-gray-500">Tidak ada data live. Periksa koneksi proxy.</td></tr>`;
 }
 
 /* =========================================================
-   RENDER STATIC TABS
+   STATIC DATA
    ========================================================= */
+const EXPERT_DATA = [
+  { ticker: "BBCA", name: "Bank Central Asia", analyst: "RHB Sekuritas", rec: "Buy", target: "Rp 10.260", reason: "Sektor perbankan diprediksi pulih, laba tumbuh 12% pada 2026." },
+  { ticker: "BMRI", name: "Bank Mandiri", analyst: "Mirae Asset", rec: "Buy", target: "-", reason: "Fundamental kuat, dividend yield 11,58%, valuasi murah." },
+  { ticker: "TLKM", name: "Telkom Indonesia", analyst: "Mirae Asset", rec: "Buy", target: "-", reason: "Saham defensif dengan prospek spin-off." },
+  { ticker: "BBRI", name: "Bank Rakyat Indonesia", analyst: "RHB Sekuritas", rec: "Buy", target: "-", reason: "Dividend yield 11,34%, ROE 14%+, valuasi atraktif." },
+  { ticker: "ADRO", name: "Adaro Energy", analyst: "Mirae Asset", rec: "Buy", target: "-", reason: "Dividend yield 14,72%, PER rendah, prospek batubara stabil." },
+  { ticker: "ITMG", name: "Indo Tambangraya", analyst: "Mirae Asset", rec: "Buy", target: "-", reason: "Dividend yield 13,62%, kas kuat, valuasi murah." }
+];
+
+const SCREENER_DATA = [
+  { ticker: "BMRI", name: "Bank Mandiri", sector: "Perbankan", pe: 6.5, div: 11.6, roe: 14.5 },
+  { ticker: "BBRI", name: "Bank Rakyat Indonesia", sector: "Perbankan", pe: 7.8, div: 11.3, roe: 14.0 },
+  { ticker: "ITMG", name: "Indo Tambangraya", sector: "Pertambangan", pe: 5.0, div: 13.6, roe: 15.0 },
+  { ticker: "ADRO", name: "Adaro Energy", sector: "Pertambangan", pe: 4.0, div: 14.7, roe: 16.0 },
+  { ticker: "PTBA", name: "Bukit Asam", sector: "Pertambangan", pe: 5.9, div: 12.7, roe: 12.0 },
+  { ticker: "BBNI", name: "Bank Negara Indonesia", sector: "Perbankan", pe: 6.2, div: 8.5, roe: 12.8 },
+  { ticker: "PGAS", name: "Perusahaan Gas Negara", sector: "Energi", pe: 5.5, div: 7.5, roe: 11.0 },
+  { ticker: "INDF", name: "Indofood Sukses", sector: "Konsumer", pe: 5.5, div: 6.5, roe: 10.5 },
+  { ticker: "ASII", name: "Astra International", sector: "Otomotif", pe: 8.5, div: 6.8, roe: 13.5 },
+  { ticker: "TLKM", name: "Telkom Indonesia", sector: "Telekomunikasi", pe: 12.5, div: 5.2, roe: 15.5 }
+];
+
 function renderExpert() {
   document.getElementById("expertList").innerHTML = EXPERT_DATA.map(p => `
     <div class="border border-gray-800 rounded-lg p-4 hover:border-emerald-700 transition">
@@ -703,7 +722,6 @@ function renderScreener() {
   const filtered = SCREENER_DATA
     .filter(s => s.pe <= 15 && s.div >= 4 && s.roe >= 10)
     .sort((a, b) => b.div - a.div);
-
   document.querySelector("#screenerTable tbody").innerHTML = filtered.map(s => `
     <tr>
       <td class="font-bold text-emerald-400">${s.ticker}</td>
@@ -738,39 +756,42 @@ async function analyze() {
   tabs.forEach(t => t.classList.add("hidden"));
   loading.classList.remove("hidden");
 
-  const status = { tradingView: "offline", idx: "offline" };
+  const status = { yahoo: "offline", bursarium: "offline", idn: "offline", tradingView: "offline", alphaVantage: "offline", finnhub: "offline" };
+  const sources = {};
 
   try {
-    // 1. Harga historis (Yahoo — real-time)
-    loadingDetail.textContent = "Mengambil harga historis...";
-    const data = await fetchHistorical(symbol, period);
+    loadingDetail.textContent = "Mengambil harga historis dari Yahoo Finance...";
+    const data = await fetchYahooHistorical(symbol, period);
     if (data.length < ma2Window) throw new Error(`Data historis tidak cukup (${data.length} bar).`);
+    status.yahoo = "live";
 
-    // 2. TradingView (live)
-    let tradingView = null;
+    const yahooQuote = await fetchYahooQuote(symbol);
+    sources.yahoo = {
+      price: yahooQuote.regularMarketPrice || data[data.length - 1].close,
+      marketCap: yahooQuote.marketCap ? formatNumber(yahooQuote.marketCap) : "-",
+      currency: yahooQuote.currency || "IDR",
+    };
+
+    loadingDetail.textContent = "Mengambil data dari Bursarium (IDX)...";
+    try { sources.bursarium = await fetchBursarium(ticker); status.bursarium = "live"; }
+    catch (e) { sources.bursarium = {}; }
+
+    loadingDetail.textContent = "Mengambil data dari IDNFinancials...";
+    try { sources.idn = await fetchIDNFinancials(ticker); status.idn = "live"; }
+    catch (e) { sources.idn = {}; }
+
     loadingDetail.textContent = "Mengambil data teknikal dari TradingView...";
-    try {
-      tradingView = await fetchTradingView(ticker);
-      status.tradingView = "live";
-    } catch (e) { console.warn("TradingView gagal:", e.message); }
+    try { sources.tradingView = await fetchTradingView(ticker); status.tradingView = "live"; }
+    catch (e) { sources.tradingView = {}; }
 
-    // 3. IDX metadata (via Yahoo quote endpoint)
-    let idxMeta = {};
-    loadingDetail.textContent = "Mengambil metadata emiten...";
-    try {
-      const meta = await corsFetch(`https://query1.finance.yahoo.com/v7/finance/quote?symbols=${symbol}`);
-      const mj = await meta.json();
-      const q = mj.quoteResponse?.result?.[0] || {};
-      idxMeta = {
-        sector: q.sector || "-",
-        board: "Utama",
-        currency: q.currency || "IDR",
-        exchange: q.fullExchangeName || "Jakarta",
-      };
-      status.idx = "live";
-    } catch (e) { console.warn("IDX meta gagal:", e.message); }
+    loadingDetail.textContent = "Mengambil data dari Alpha Vantage...";
+    try { sources.alphaVantage = await fetchAlphaVantage(ticker); status.alphaVantage = "live"; }
+    catch (e) { sources.alphaVantage = {}; }
 
-    // 4. Header
+    loadingDetail.textContent = "Mengambil data dari Finnhub...";
+    try { sources.finnhub = await fetchFinnhub(ticker); status.finnhub = "live"; }
+    catch (e) { sources.finnhub = {}; }
+
     const lastPrice = data[data.length - 1].close;
     const prevPrice = data.length > 1 ? data[data.length - 2].close : lastPrice;
     const change = lastPrice - prevPrice;
@@ -782,7 +803,6 @@ async function analyze() {
     changeEl.textContent = `${change >= 0 ? "▲" : "▼"} ${change.toLocaleString("id-ID", { maximumFractionDigits: 2 })} (${changePct.toFixed(2)}%)`;
     changeEl.className = "text-sm mt-1 " + (change >= 0 ? "text-emerald-400" : "text-red-400");
 
-    // 5. MA & Signal
     const ma1 = computeMA(data, ma1Window, maType);
     const ma2 = computeMA(data, ma2Window, maType);
     const signal = generateSignal(data, ma1Window, ma2Window);
@@ -790,34 +810,25 @@ async function analyze() {
     badge.textContent = signal.text;
     badge.className = `px-3 py-1.5 rounded-lg text-xs font-semibold ${signal.color}`;
 
-    // 6. Charts
     renderMainChart(data, ma1, ma2, { ma1: `${maType} ${ma1Window}`, ma2: `${maType} ${ma2Window}` });
     const predictions = predictPrices(data, ma1Window, predictDays);
     renderPredictChart(data, predictions);
     renderPredictTable(predictions);
 
-    // 7. Fundamental statistik (dari DB terintegrasi)
-    const db = INTEGRATED_DB[ticker] || DEFAULT_DB;
-    const gf = db.googleFinance;
-    document.getElementById("statPE").textContent = gf.pe != null ? gf.pe + "x" : "--";
-    document.getElementById("statDiv").textContent = gf.div != null ? gf.div + "%" : "--";
-    document.getElementById("statROE").textContent = gf.roe != null ? gf.roe + "%" : "--";
-    document.getElementById("statPBV").textContent = gf.pbv != null ? gf.pbv + "x" : "--";
+    const stats = sources.bursarium.per ? sources.bursarium : (sources.alphaVantage || {});
+    document.getElementById("statPE").textContent = stats.per || stats.pe ? (stats.per || stats.pe) + "x" : "--";
+    document.getElementById("statDiv").textContent = stats.div ? stats.div + "%" : "--";
+    document.getElementById("statROE").textContent = stats.roe ? stats.roe + "%" : "--";
+    document.getElementById("statPBV").textContent = stats.pbv ? stats.pbv + "x" : "--";
 
-    // 8. Multi-source
-    renderMultiSource(ticker, tradingView, idxMeta, status);
-
-    // 9. Static
+    renderMultiSource(ticker, sources, status);
     renderExpert();
     renderScreener();
 
-    // 10. Restore active tab
     const activeTab = document.querySelector(".tab-btn.tab-active").dataset.tab;
     document.getElementById(`tab-${activeTab}`).classList.remove("hidden");
 
-    // 11. Timestamp
     document.getElementById("lastUpdate").textContent = "Update: " + new Date().toLocaleTimeString("id-ID");
-
     loading.classList.add("hidden");
   } catch (e) {
     console.error(e);
@@ -827,20 +838,23 @@ async function analyze() {
   }
 }
 
+function formatNumber(n) {
+  if (!n) return "-";
+  if (n >= 1e12) return (n / 1e12).toFixed(2) + " T";
+  if (n >= 1e9) return (n / 1e9).toFixed(2) + " M";
+  if (n >= 1e6) return (n / 1e6).toFixed(2) + " Jt";
+  return n.toLocaleString("id-ID");
+}
+
 /* =========================================================
-   AUTO-REFRESH
+   AUTO-REFRESH & EVENTS
    ========================================================= */
 function setupAutoRefresh() {
   if (refreshTimer) clearInterval(refreshTimer);
   const interval = parseInt(document.getElementById("refreshInterval").value);
-  if (interval > 0) {
-    refreshTimer = setInterval(analyze, interval * 1000);
-  }
+  if (interval > 0) refreshTimer = setInterval(analyze, interval * 1000);
 }
 
-/* =========================================================
-   EVENT LISTENERS
-   ========================================================= */
 document.getElementById("analyzeBtn").addEventListener("click", analyze);
 document.getElementById("ticker").addEventListener("keydown", e => { if (e.key === "Enter") analyze(); });
 document.getElementById("ma1").addEventListener("input", e => document.getElementById("ma1Label").textContent = e.target.value);
